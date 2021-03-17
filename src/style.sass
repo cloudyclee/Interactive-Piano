@@ -1,0 +1,163 @@
+$color_white: #eee
+$color_black: #585858
+$key_width: 44px
+$key_height: 300px
+
+*
+  user-select: none
+
+body
+  text-align: center
+
+#app
+  margin-top: 60px
+
+.keyboard
+  box-shadow: 0px 0px 40px rgba(black,0.4)
+  font-size: 0px
+  display: inline-block
+  margin-top: 50px
+  cursor: pointer
+  .piano
+    display: inline-block
+    position: relative
+    .white
+      position: relative
+      width: $key_width
+      height: $key_height
+      border: solid 1px $color_white
+      box-sizing: border-box
+      display: inline-block
+      color: $color_black
+      background-color: white
+      transform: translate(-3px, -3px)
+      transition: 0.1s
+      &:hover
+        background-color: darken($color_white,10)
+        // border: solid 1px darken($color_white,10)
+        border: none
+        color: black
+        font-weight: 900
+      &:active
+        &.playing
+          transform: translate(0px, 0px)
+          // border-width: 0px 1px 5px 1px
+          // border-color: white
+        .label
+          span
+            // transform: translate(-50%, 4px)
+    .black
+      position: absolute
+      left: -$key_width/4
+      top: -$key_height
+      width: $key_width/2
+      height: $key_height*0.55 
+      display: inline-block
+      background-color: $color_black
+      transform: translate(-3px, -3px)
+      z-index: 10
+      transition: 0.1s
+      .label
+        top: 90%
+        color: $color_white
+        span
+          color: $color_black
+      &:hover
+        background-color: darken($color_black,20)
+        // border: solid 1px darken($color_black,20)
+        // box-sizing: border-box
+        color: black
+        font-weight: 900
+      &:active
+        &.playing
+          // border-width: 0px 1px 5px 1px
+          // border-color: white
+          transform: translate(0px, 0px)
+        .label
+          span
+            // transform: translate(-50%, 4px)
+    .label
+      position: absolute
+      left: 50%
+      top: 94%
+      transform: translateX(-50%)
+      font-size: 10px
+      span
+        position: absolute
+        left: 50%
+        transform: translateX(-50%)
+
+h4
+  position: relative
+  margin-top: 60px
+  span
+    position: absolute
+    top: 3px
+    font-size: 10px
+    transform: translateX(15px)
+    cursor: pointer
+input
+  margin-top: 60px
+  margin-bottom: 2px
+ul
+  padding-left: 0px
+  li
+    list-style: none
+    display: inline-block
+    border-right: solid 1px $color_black
+    width: 30px
+    height: 20px
+    line-height: 20px
+    padding: 3px
+    transition: 0.1s
+    // &:hover
+    //   background-color: darken($color_white,10)
+
+.buttons
+  margin-top: 10px
+  button
+    position: relative
+    margin-right: 10px
+    width: 110px
+    background-color: $color_white
+    border: none
+    border: solid 1px $color_black
+    border-radius: 3px
+    padding: 5px 0px
+    transition: 0.3s
+    box-shadow: 0px 0px 10px 1px rgba(black,0.2)
+    cursor: pointer
+    &:hover
+      background-color: $color_black
+      color: $color_white
+    .fa-circle
+      color: darken(red,5)
+  span
+    margin-left: 5px
+    
+.white.pressing
+  background-color: darken($color_white,10) !important
+  // box-sizing: border-box !important
+  // border-width: 0px 1px 5px 1px !important
+  // border-color: white !important
+  transform: translate(0px, 0px) !important 
+  color: black !important
+  font-weight: 900 !important
+  border: none !important
+  // .label
+  //   span
+  //     transform: translate(-50%, 4px)
+.black.pressing
+  background-color: darken($color_black,20) !important
+  // box-sizing: border-box !important
+  // border-width: 0px 1px 5px 1px !important
+  // border-color: white !important
+  transform: translate(0px, 0px) !important
+  color: black !important
+  font-weight: 900 !important
+  border: none !important
+  // .label
+  //   span
+  //     transform: translate(-50%, 4px)
+.highlight
+  background-color: darken($color_white,10)

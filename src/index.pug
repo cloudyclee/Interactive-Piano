@@ -1,0 +1,43 @@
+#app
+  h1 Vue.js Piano Project 7
+  audio(preload="auto" v-bind:data-num="s.note" v-for="s in sounds")
+    source(v-bind:src="s.source" type="audio/ogg")
+  .keyboard
+    .piano(v-for="keys in note2keys")
+      .white.playing(v-if="keys.type=='white'" @click="play(keys.num,1)" v-bind:data-key="keys.num")
+        .label {{ keys.name }}
+          span <br><br>{{ keys.value }}
+      .black.playing(v-if="keys.type=='black'" @click="play(keys.num,1)" v-bind:data-key="keys.num")
+        .label {{ keys.name }}
+          span <br><br>{{ keys.value }}
+  br
+  h4(v-if="music.notes.length == 0 && !isNaming") Press keys to play the corresponding note
+  h4(v-if="music.notes.length > 0 && !isNaming") {{ music.name }}
+    span(@click="naming()" v-if="status != ('playing' || 'recording')")
+      i.fas.fa-pencil-alt
+  input#melody_name(v-if="isNaming" v-model="music.name")
+  ul
+    li(v-for="note in music.notes" v-bind:data-time="note.time" v-bind:data-id="note.num") {{ note.name }}
+  br
+  .buttons
+    button(@click="load_sample(tag)" :disabled="status == ('playing' || 'recording')" v-if="tag == 0") Sample 1
+    button(@click="load_sample(tag)" :disabled="status == ('playing' || 'recording')" v-if="tag == 1") Sample 2
+    button(@click="stop();play_single()" :disabled="status == ('playing' || 'recording') || music.notes.length == 0") Play Single
+    button(@click="play_all()" v-if="now_time <= 0 && record_now_time <= 0" :disabled="music.notes.length == 0")
+      i.fa.fa-play
+      span Play All
+    button(@click="stop()" v-if="(now_time > 0 || record_now_time > 0) && status != 'stop'")
+      i.fa.fa-pause
+      span Pause
+    button(@click="resume()" v-if="status == 'stop'")
+      i.fa.fa-play
+      span Resume
+    button(@click="record()" v-if="record_now_time <= 0" :disabled="status == ('playing' || 'recording')") 
+      i.fa.fa-circle(:style="{'color': (status == ('playing' || 'recording')) ? '#BDBDBD' : '#F82B2B'}")
+      span Record
+    button(@click="stop_record()" v-if="record_now_time > 0" :disabled="status == 'playing'") 
+      i.fa.fa-stop
+      span Stop Record
+    button(@click="clear()") Clear
+    p {{ now_time + record_now_time }}
+  
