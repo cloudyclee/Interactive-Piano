@@ -13,7 +13,7 @@
   br
   h4(v-if="music.notes.length == 0 && !isNaming") Press keys to play the corresponding note
   h4(v-if="music.notes.length > 0 && !isNaming") {{ music.name }}
-    span(@click="naming()" v-if="status != ('playing' || 'recording')")
+    span(@click="naming()" v-if="status != ('playing' || 'recording') && !sample_mode")
       i.fas.fa-pencil-alt
   input#melody_name(v-if="isNaming" v-model="music.name")
   ul

@@ -12,7 +12,7 @@ const vm = Vue.createApp({
     return {
       sounds: soundpack,
       music: {name: "", notes: ""},
-      code: -1,
+      sample_mode: true,
       tag: 0,
       now_time: 0,
       record_now_time: 0,
@@ -79,6 +79,7 @@ const vm = Vue.createApp({
     load_sample: function(flag){
       var vobj = this;
       vobj.now_note = 0;
+      vobj.sample_mode = true;
       if( vobj.tag == 0){
         vobj.music.name = "Little Star";
       } else {
@@ -177,6 +178,7 @@ const vm = Vue.createApp({
       var vobj = this;
       vobj.now_time = 0;
       vobj.record_now_time = 0;
+      vobj.sample_mode = false;
       vobj.status = "recording";
       vobj.music = {name: "New Melody", notes: []};
       vobj.player = null;

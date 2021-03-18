@@ -24,7 +24,7 @@
     </div>
   </div><br/>
   <h4 v-if="music.notes.length == 0 &amp;&amp; !isNaming">Press keys to play the corresponding note</h4>
-  <h4 v-if="music.notes.length &gt; 0 &amp;&amp; !isNaming">{{ music.name }}<span @click="naming()" v-if="status != ('playing' || 'recording')"><i class="fas fa-pencil-alt"></i></span></h4>
+  <h4 v-if="music.notes.length &gt; 0 &amp;&amp; !isNaming">{{ music.name }}<span @click="naming()" v-if="status != ('playing' || 'recording') &amp;&amp; !sample_mode"><i class="fas fa-pencil-alt"></i></span></h4>
   <input id="melody_name" v-if="isNaming" v-model="music.name"/>
   <ul>
     <li v-for="note in music.notes" v-bind:data-time="note.time" v-bind:data-id="note.num">{{ note.name }}</li>
