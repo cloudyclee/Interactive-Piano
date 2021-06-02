@@ -1,4 +1,4 @@
-# Project7
+# Interactive Piano
 
 A Pen created on CodePen.io. Original URL: [https://codepen.io/ylazqhrh/pen/jOVJYNj](https://codepen.io/ylazqhrh/pen/jOVJYNj).
 
