@@ -1,50 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>CodePen - Project7</title>
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'><link rel="stylesheet" href="./style.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'>
+  <link rel="stylesheet" href="./dist/style.css">
 
 </head>
+
 <body>
-<!-- partial:index.partial.html -->
-<div id="app">
-  <h1>Vue.js Piano Project 7</h1>
-  <audio preload="auto" v-bind:data-num="s.note" v-for="s in sounds">
-    <source v-bind:src="s.source" type="audio/ogg"/>
-  </audio>
-  <div class="keyboard">
-    <div class="piano" v-for="keys in note2keys">
-      <div class="white playing" v-if="keys.type=='white'" @click="play(keys.num,1)" v-bind:data-key="keys.num">
-        <div class="label">{{ keys.name }}<span><br><br>{{ keys.value }}</span></div>
+  <!-- partial:index.partial.html -->
+  <div id="app">
+    <h1>Vue.js Piano Project 7</h1>
+    <audio preload="auto" v-bind:data-num="s.note" v-for="s in sounds">
+      <source v-bind:src="s.source" type="audio/ogg" />
+    </audio>
+    <div class="keyboard">
+      <div class="piano" v-for="keys in note2keys">
+        <div class="white playing" v-if="keys.type=='white'" @click="play(keys.num,1)" v-bind:data-key="keys.num">
+          <div class="label">{{ keys.name }}<span><br><br>{{ keys.value }}</span></div>
+        </div>
+        <div class="black playing" v-if="keys.type=='black'" @click="play(keys.num,1)" v-bind:data-key="keys.num">
+          <div class="label">{{ keys.name }}<span><br><br>{{ keys.value }}</span></div>
+        </div>
       </div>
-      <div class="black playing" v-if="keys.type=='black'" @click="play(keys.num,1)" v-bind:data-key="keys.num">
-        <div class="label">{{ keys.name }}<span><br><br>{{ keys.value }}</span></div>
-      </div>
+    </div><br />
+    <h4 v-if="music.notes.length == 0 &amp;&amp; !isNaming">Press keys to play the corresponding note</h4>
+    <h4 v-if="music.notes.length &gt; 0 &amp;&amp; !isNaming">{{ music.name }}<span @click="naming()"
+        v-if="status != ('playing' || 'recording') &amp;&amp; !sample_mode"><i class="fas fa-pencil-alt"></i></span>
+    </h4>
+    <input id="melody_name" v-if="isNaming" v-model="music.name" />
+    <ul>
+      <li v-for="note in music.notes" v-bind:data-time="note.time" v-bind:data-id="note.num">{{ note.name }}</li>
+    </ul><br />
+    <div class="buttons">
+      <button @click="load_sample(tag)" :disabled="status == ('playing' || 'recording')" v-if="tag == 0">Sample
+        1</button>
+      <button @click="load_sample(tag)" :disabled="status == ('playing' || 'recording')" v-if="tag == 1">Sample
+        2</button>
+      <button @click="stop();play_single()"
+        :disabled="status == ('playing' || 'recording') || music.notes.length == 0">Play Single</button>
+      <button @click="play_all()" v-if="now_time &lt;= 0 &amp;&amp; record_now_time &lt;= 0"
+        :disabled="music.notes.length == 0"><i class="fa fa-play"></i><span>Play All</span></button>
+      <button @click="stop()" v-if="(now_time &gt; 0 || record_now_time &gt; 0) &amp;&amp; status != 'stop'"><i
+          class="fa fa-pause"></i><span>Pause</span></button>
+      <button @click="resume()" v-if="status == 'stop'"><i class="fa fa-play"></i><span>Resume</span></button>
+      <button @click="record()" v-if="record_now_time &lt;= 0" :disabled="status == ('playing' || 'recording')"> <i
+          class="fa fa-circle"
+          :style="{'color': (status == ('playing' || 'recording')) ? '#BDBDBD' : '#F82B2B'}"></i><span>Record</span></button>
+      <button @click="stop_record()" v-if="record_now_time &gt; 0" :disabled="status == 'playing'"> <i
+          class="fa fa-stop"></i><span>Stop Record</span></button>
+      <button @click="clear()">Clear</button>
+      <p>{{ now_time + record_now_time }}</p>
     </div>
-  </div><br/>
-  <h4 v-if="music.notes.length == 0 &amp;&amp; !isNaming">Press keys to play the corresponding note</h4>
-  <h4 v-if="music.notes.length &gt; 0 &amp;&amp; !isNaming">{{ music.name }}<span @click="naming()" v-if="status != ('playing' || 'recording') &amp;&amp; !sample_mode"><i class="fas fa-pencil-alt"></i></span></h4>
-  <input id="melody_name" v-if="isNaming" v-model="music.name"/>
-  <ul>
-    <li v-for="note in music.notes" v-bind:data-time="note.time" v-bind:data-id="note.num">{{ note.name }}</li>
-  </ul><br/>
-  <div class="buttons">
-    <button @click="load_sample(tag)" :disabled="status == ('playing' || 'recording')" v-if="tag == 0">Sample 1</button>
-    <button @click="load_sample(tag)" :disabled="status == ('playing' || 'recording')" v-if="tag == 1">Sample 2</button>
-    <button @click="stop();play_single()" :disabled="status == ('playing' || 'recording') || music.notes.length == 0">Play Single</button>
-    <button @click="play_all()" v-if="now_time &lt;= 0 &amp;&amp; record_now_time &lt;= 0" :disabled="music.notes.length == 0"><i class="fa fa-play"></i><span>Play All</span></button>
-    <button @click="stop()" v-if="(now_time &gt; 0 || record_now_time &gt; 0) &amp;&amp; status != 'stop'"><i class="fa fa-pause"></i><span>Pause</span></button>
-    <button @click="resume()" v-if="status == 'stop'"><i class="fa fa-play"></i><span>Resume</span></button>
-    <button @click="record()" v-if="record_now_time &lt;= 0" :disabled="status == ('playing' || 'recording')"> <i class="fa fa-circle" :style="{'color': (status == ('playing' || 'recording')) ? '#BDBDBD' : '#F82B2B'}"></i><span>Record</span></button>
-    <button @click="stop_record()" v-if="record_now_time &gt; 0" :disabled="status == 'playing'"> <i class="fa fa-stop"></i><span>Stop Record</span></button>
-    <button @click="clear()">Clear</button>
-    <p>{{ now_time + record_now_time }}</p>
   </div>
-</div>
-<!-- partial -->
+  <!-- partial -->
   <script src='https://unpkg.com/vue@next'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script><script  src="./script.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+  <script src="./dist/script.js"></script>
 
 </body>
+
 </html>
